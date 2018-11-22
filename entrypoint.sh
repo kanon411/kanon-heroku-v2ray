@@ -4,15 +4,15 @@ if [[ -z "${UUID}" ]]; then
 fi
 
 if [[ -z "${AlterID}" ]]; then
-  AlterID="10"
+  AlterID="64"
 fi
 
 if [[ -z "${V2_Path}" ]]; then
-  V2_Path="/FreeApp"
+  V2_Path="/route"
 fi
 
 if [[ -z "${V2_QR_Path}" ]]; then
-  V2_QR_Code="1234"
+  V2_QR_Code="res"
 fi
 
 rm -rf /etc/localtime
@@ -34,7 +34,7 @@ cd /v2raybin
 wget --no-check-certificate -qO 'v2ray.zip' "https://github.com/v2ray/v2ray-core/releases/download/$V_VER/v2ray-linux-$SYS_Bit.zip"
 unzip v2ray.zip
 rm -rf v2ray.zip
-chmod +x /v2raybin/v2ray-$V_VER-linux-$SYS_Bit/*
+chmod +x /v2raybin/*
 
 C_VER=`wget -qO- "https://api.github.com/repos/mholt/caddy/releases/latest" | grep 'tag_name' | cut -d\" -f4`
 mkdir /caddybin
@@ -47,11 +47,11 @@ cd /root
 mkdir /wwwroot
 cd /wwwroot
 
-wget --no-check-certificate -qO 'demo.tar.gz' "https://github.com/ki8852/v2ray-heroku-undone/raw/master/demo.tar.gz"
+wget --no-check-certificate -qO 'demo.tar.gz' "https://github.com/kanon411/kanon-heroku-v2ray/blob/master/demo.tar.gz"
 tar xvf demo.tar.gz
 rm -rf demo.tar.gz
 
-cat <<-EOF > /v2raybin/v2ray-$V_VER-linux-$SYS_Bit/config.json
+cat <<-EOF > /v2raybin/config.json
 {
     "log":{
         "loglevel":"warning"
@@ -59,12 +59,11 @@ cat <<-EOF > /v2raybin/v2ray-$V_VER-linux-$SYS_Bit/config.json
     "inbound":{
         "protocol":"vmess",
         "listen":"127.0.0.1",
-        "port":2333,
+        "port":60007,
         "settings":{
             "clients":[
                 {
                     "id":"${UUID}",
-                    "level":1,
                     "alterId":${AlterID}
                 }
             ]
@@ -90,7 +89,7 @@ http://0.0.0.0:${PORT}
 	root /wwwroot
 	index index.html
 	timeouts none
-	proxy ${V2_Path} localhost:2333 {
+	proxy ${V2_Path} localhost:60000 {
 		websocket
 		header_upstream -Origin
 	}

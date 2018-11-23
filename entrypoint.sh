@@ -47,7 +47,7 @@ cd /root
 mkdir /wwwroot
 cd /wwwroot
 
-wget --no-check-certificate -qO 'demo.tar.gz' "https://github.com/kanon411/kanon-heroku-v2ray/blob/master/demo.tar.gz"
+wget --no-check-certificate -qO 'demo.tar.gz' "https://raw.githubusercontent.com/kanon411/kanon-heroku-v2ray/master/demo.tar.gz"
 tar xvf demo.tar.gz
 rm -rf demo.tar.gz
 

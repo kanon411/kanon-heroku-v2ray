@@ -122,7 +122,7 @@ else
   echo -n "${vmess}" | qrencode -s 6 -o /wwwroot/$V2_QR_Path/v2.png
 fi
 
-cd /v2raybin/v2ray-$V_VER-linux-$SYS_Bit
+cd /v2raybin
 ./v2ray &
 cd /caddybin
 ./caddy -conf="Caddyfile"

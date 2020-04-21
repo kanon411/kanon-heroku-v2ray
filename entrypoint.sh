@@ -29,6 +29,7 @@ else
   V_VER="v$VER"
 fi
 
+cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 mkdir /v2raybin
 cd /v2raybin
 wget --no-check-certificate -qO 'v2ray.zip' "https://github.com/v2ray/v2ray-core/releases/download/$V_VER/v2ray-linux-$SYS_Bit.zip"

@@ -15,6 +15,10 @@ if [[ -z "${V2_QR_Path}" ]]; then
   V2_QR_Code="res"
 fi
 
+if [[ -z "${PROXY_PORT}" ]]; then
+  PROXY_PORT="60010"
+fi
+
 rm -rf /etc/localtime
 ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 date -R
@@ -60,7 +64,7 @@ cat <<-EOF > /v2raybin/config.json
     "inbound":{
         "protocol":"vmess",
         "listen":"127.0.0.1",
-        "port":60010,
+        "port":${PROXY_PORT},
         "settings":{
             "clients":[
                 {
@@ -90,7 +94,7 @@ http://0.0.0.0:${PORT}
 	root /wwwroot
 	index index.html
 	timeouts none
-	proxy ${V2_Path} localhost:60010 {
+	proxy ${V2_Path} localhost:${PROXY_PORT} {
 		websocket
 		header_upstream -Origin
 	}

@@ -33,15 +33,14 @@ else
   V_VER="v$VER"
 fi
 
-mkdir /myapp
-cd /myapp
+
 mkdir v2raybin
-cd /myapp/v2raybin
+cd /v2raybin
 wget --no-check-certificate -qO 'v2r.zip' "https://github.com/v2ray/v2ray-core/releases/download/$V_VER/v2ray-linux-$SYS_Bit.zip"
+sleep 15
 unzip v2r.zip
 rm -rf v2r.zip
-chmod +x /myapp/*
-chmod +x /myapp/v2raybin/*
+chmod +x /v2raybin/*
 
 C_VER=`wget -qO- "https://api.github.com/repos/mholt/caddy/releases/latest" | grep 'tag_name' | cut -d\" -f4`
 mkdir /caddybin
@@ -58,7 +57,7 @@ wget --no-check-certificate -qO 'demo.tar.gz' "https://github.com/kanon411/kanon
 tar xvf demo.tar.gz
 rm -rf demo.tar.gz
 
-cat <<-EOF > /myapp/v2raybin/config.json
+cat <<-EOF > /v2raybin/config.json
 {
     "log":{
         "loglevel":"warning"
@@ -90,7 +89,7 @@ cat <<-EOF > /myapp/v2raybin/config.json
 }
 EOF
 
-cat <<-EOF > /caddybin/Caddyfile
+cat <<-EOF > /Caddyfile
 http://0.0.0.0:${PORT}
 {
 	root /wwwroot
@@ -103,7 +102,7 @@ http://0.0.0.0:${PORT}
 }
 EOF
 
-cat <<-EOF > /myapp/v2raybin/vmess.json 
+cat <<-EOF > /v2raybin/vmess.json 
 {
     "v": "2",
     "ps": "${AppName}.herokuapp.com",
@@ -129,7 +128,7 @@ else
   echo -n "${vmess}" | qrencode -s 6 -o /wwwroot/$V2_QR_Path/v2.png
 fi
 
-cd /myapp/v2raybin
+cd /v2raybin
 ./v2ray &
 cd /caddybin
 ./caddy -conf="Caddyfile"

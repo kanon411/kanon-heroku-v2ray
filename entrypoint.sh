@@ -59,7 +59,9 @@ rm -rf demo.tar.gz
 cat <<-EOF > /v2raybin/config.json
 {
     "log":{
-        "loglevel":"error"
+        "loglevel":"debug"
+	"access": "/var/log/v2ray/access.log",
+        "error": "/var/log/v2ray/error.log"
     },
     "inbound":{
         "protocol":"vmess",

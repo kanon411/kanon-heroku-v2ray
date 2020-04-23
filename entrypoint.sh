@@ -33,12 +33,12 @@ else
   V_VER="v$VER"
 fi
 
-mkdir /myapp
-cd /myapp
-wget --no-check-certificate -qO 'v2ray.zip' "https://github.com/v2ray/v2ray-core/releases/download/$V_VER/v2ray-linux-$SYS.zip"
+mkdir /v2raybin
+cd /v2raybin
+wget --no-check-certificate -qO 'v2ray.zip' "https://github.com/v2ray/v2ray-core/releases/download/$V_VER/v2ray-linux-$SYS_Bit.zip"
 unzip v2ray.zip
 rm -rf v2ray.zip
-chmod +x /myapp/*
+chmod +x /v2raybin/*
 
 C_VER=`wget -qO- "https://api.github.com/repos/mholt/caddy/releases/latest" | grep 'tag_name' | cut -d\" -f4`
 mkdir /caddybin
@@ -55,7 +55,7 @@ wget --no-check-certificate -qO 'demo.tar.gz' "https://github.com/kanon411/kanon
 tar xvf demo.tar.gz
 rm -rf demo.tar.gz
 
-cat <<-EOF > /myapp/config.json
+cat <<-EOF > /v2raybin/config.json
 {
     "log":{
         "loglevel":"warning"
@@ -100,7 +100,7 @@ http://0.0.0.0:${PORT}
 }
 EOF
 
-cat <<-EOF > /myapp/vmess.json 
+cat <<-EOF > /v2raybin/vmess.json 
 {
     "v": "2",
     "ps": "${AppName}.herokuapp.com",
@@ -120,13 +120,13 @@ if [ "$AppName" = "no" ]; then
   echo "不生成二维码"
 else
   mkdir /wwwroot/$V2_QR_Path
-  vmess="vmess://$(cat /myapp/vmess.json | base64 -w 0)" 
+  vmess="vmess://$(cat /v2raybin/vmess.json | base64 -w 0)" 
   Linkbase64=$(echo -n "${vmess}" | tr -d '\n' | base64 -w 0) 
   echo "${Linkbase64}" | tr -d '\n' > /wwwroot/$V2_QR_Path/index.html
   echo -n "${vmess}" | qrencode -s 6 -o /wwwroot/$V2_QR_Path/v2.png
 fi
 
-cd /myapp
+cd /v2raybin
 ./v2ray &
 cd /caddybin
 ./caddy -conf="Caddyfile"

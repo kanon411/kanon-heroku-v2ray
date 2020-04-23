@@ -59,7 +59,7 @@ rm -rf demo.tar.gz
 cat <<-EOF > /v2raybin/config.json
 {
     "log":{
-        "loglevel":"warning"
+        "loglevel":"error"
     },
     "inbound":{
         "protocol":"vmess",

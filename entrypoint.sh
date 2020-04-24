@@ -15,9 +15,7 @@ if [[ -z "${V2_QR_Path}" ]]; then
   V2_QR_Code="res"
 fi
 
-if [[ -z "${PROXY_PORT}" ]]; then
-  PROXY_PORT="60010"
-fi
+
 
 rm -rf /etc/localtime
 ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
@@ -33,13 +31,11 @@ else
   V_VER="v$VER"
 fi
 
-
-
-mkdir v2raybin
+mkdir /v2raybin
 cd /v2raybin
-wget --no-check-certificate -O 'v2r.zip' "https://github.com/v2ray/v2ray-core/releases/download/$V_VER/v2ray-linux-$SYS_Bit.zip"
-unzip v2r.zip
-rm -rf v2r.zip
+wget --no-check-certificate -qO 'v2ray.zip' "https://github.com/v2ray/v2ray-core/releases/download/$V_VER/v2ray-linux-$SYS_Bit.zip"
+unzip v2ray.zip
+rm -rf v2ray.zip
 chmod +x /v2raybin/*
 
 C_VER=`wget -qO- "https://api.github.com/repos/mholt/caddy/releases/latest" | grep 'tag_name' | cut -d\" -f4`
@@ -65,7 +61,7 @@ cat <<-EOF > /v2raybin/config.json
     "inbound":{
         "protocol":"vmess",
         "listen":"127.0.0.1",
-        "port":${PROXY_PORT},
+        "port":60017,
         "settings":{
             "clients":[
                 {
@@ -89,13 +85,13 @@ cat <<-EOF > /v2raybin/config.json
 }
 EOF
 
-cat <<-EOF > /Caddyfile
+cat <<-EOF > /caddybin/Caddyfile
 http://0.0.0.0:${PORT}
 {
 	root /wwwroot
 	index index.html
 	timeouts none
-	proxy ${V2_Path} localhost:${PROXY_PORT} {
+	proxy ${V2_Path} localhost:60017 {
 		websocket
 		header_upstream -Origin
 	}
@@ -122,7 +118,7 @@ if [ "$AppName" = "no" ]; then
   echo "不生成二维码"
 else
   mkdir /wwwroot/$V2_QR_Path
-  vmess="vmess://$(cat /myapp/v2raybin/vmess.json | base64 -w 0)" 
+  vmess="vmess://$(cat /v2raybin/vmess.json | base64 -w 0)" 
   Linkbase64=$(echo -n "${vmess}" | tr -d '\n' | base64 -w 0) 
   echo "${Linkbase64}" | tr -d '\n' > /wwwroot/$V2_QR_Path/index.html
   echo -n "${vmess}" | qrencode -s 6 -o /wwwroot/$V2_QR_Path/v2.png

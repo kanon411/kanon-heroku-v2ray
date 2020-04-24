@@ -30,10 +30,6 @@
     "V2RAY_RAY_BUFFER_SIZE": {
        "description": "每个连接的缓存大小，单位MB，默认10。如果感觉有断流现象，请考虑将缓存改成1",
        "value": "10"
-     },
-    "PROXY_PORT": {
-       "description": "代理监听端口",
-       "value": "60010"
      }
   },
   "website": "https://github.com/ki8852/v2ray-heroku-undone",
